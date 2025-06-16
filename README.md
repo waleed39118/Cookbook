@@ -1,1 +1,1 @@
-# men_stack_session_auth
+# men-stack-relating-data-lab-cookbook
