@@ -1,1 +1,1 @@
-# cookbook
+# men-stack-session-auth

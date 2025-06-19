@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>New Application</title>
+</head>
+<body>
+  <h1>Create New Application</h1>
+
+  <form action="/users/<%= userId %>/applications" method="POST">
+    <label for="title">Application Title:</label>
+    <input type="text" id="title" name="title" required>
+
+    <br><br>
+
+    <button type="submit">Submit Application</button>
+  </form>
+</body>
+</html>

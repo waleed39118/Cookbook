@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Applications</title>
+</head>
+<body>
+  <h1>My Applications</h1>
+
+<a href="/users/<%= applications[0]?.user || 'USER_ID' %>/applications/new">
+  <button>+ New Application</button>
+</a>
+
+<ul>
+  <% applications.forEach(app => { %>
+    <li><strong><%= app.title %></strong> - <%= app.status %></li>
+  <% }) %>
+</ul>
+
+</body>
+</html>

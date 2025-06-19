@@ -1,0 +1,12 @@
+<!--  Added one more dot in the directory before the partials  -->
+<%- include ('../partials/_navbar.ejs') %>
+
+<form action="/auth/sign-in" method="POST">
+  <label for="username">Username</label>
+  <input type="text" name="username" id="username">
+  <br>
+  <label for="password">Password</label>
+  <input type="password" name="password" id="password">
+  <br>
+  <button type="submit">Sign In</button>
+</form>
