@@ -1,11 +1,15 @@
 <nav>
+    <a href="/">Home</a>
+    
     <% if (user) { %>
-      <h1>Welcome to CookBook! <%= user.username %></h1>
-      <a href="/users/<%= user._id %>/applications">Your Applications</a> 
-      <a href="/auth/sign-out">Sign out</a>
+        <a href="/recipes">Recipes</a>
+        <a href="/ingredients">Ingredients</a>
+        <a href="/users">Community</a>
+        <form action="/auth/sign-out" method="POST" style="display: inline;">
+            <button type="submit">Sign Out</button>
+        </form>
     <% } else { %>
-      <h1>Welcome to Our Kitchen, guest.</h1>
-      <a href="/auth/sign-up">Sign up</a>
-      <a href="/auth/sign-in">Sign in</a>
+        <a href="/auth/sign-in">Sign In</a>
+        <a href="/auth/sign-up">Sign Up</a>
     <% } %>
-  </nav>
+</nav>

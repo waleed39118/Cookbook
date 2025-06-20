@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= recipe.name %></title>
+  </head>
+<body>
+  <%- include('../partials/_navbar') %>
+    <div class="container">
+    <div class="header">
+      <h1><%= recipe.name %></h1>
+    </div>
+    
+    <div class="recipe-details">
+      <div class="section">
+        <h2 class="section-title">Ingredients</h2>
+        <% if (recipe.ingredients && recipe.ingredients.length > 0) { %>
+          <ul class="ingredients-list">
+            <% recipe.ingredients.forEach(ingredient => { %>
+              <li><%= ingredient.name %></li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p>There are no added ingredients to this recipe.</p>
+        <% } %>
+      </div>
+      
+      <div class="section">
+        <h2 class="section-title">How to prepare</h2>
+        <div class="instructions">
+          <%= recipe.instructions || 'Preparation steps have not been added yet. %>
+        </div>
+      </div>
+      
+      <div class="actions">
+        <a href="/recipes/<%= recipe._id %>/edit" class="btn btn-edit">Edit the recipe</a>
+        <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST" style="display: inline;">
+          <button type="submit" class="btn btn-delete">Delete recipe</button>
+        </form>
+        <a href="/recipes" class="btn btn-back">Back to list</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

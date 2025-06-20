@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add a new recipe</title>
+</head>
+<body>
+  <h1>Add a new recipe</h1>
+  <form action="/recipes" method="POST">
+    <label>Recipe name:
+      <input type="text" name="name" required>
+    </label>
+    <br>
+    <label>Steps:
+      <textarea name="instructions"></textarea>
+    </label>
+    <br>
+    <label>Ingredients:
+      <select name="ingredients" multiple>
+        <% ingredients.forEach(ingredient => { %>
+          <option value="<%= ingredient._id %>"><%= ingredient.name %></option>
+        <% }) %>
+      </select>
+    </label>
+    <br>
+    <button type="submit">Save the recipe</button>
+  </form>
+
+  <h2>Add a new component</h2>
+  <form action="/ingredients" method="POST">
+    <input type="text" name="name" placeholder="Component name required">
+    <button type="submit">Component name</button>
+  </form>
+</body>
+</html>

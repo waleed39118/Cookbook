@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredient Manager</title>
+</head>
+<body>
+    <h1>Ingredient Management</h1>
+    
+    <nav>
+        <a href="/">Home</a> |
+        <a href="/recipes">Recipes</a> |
+        <a href="/ingredients">Ingredients</a>
+    </nav>
+    
+    <h2>Add New Ingredient</h2>
+    <form action="/ingredients" method="POST">
+        <label for="name">Ingredient Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter ingredient name" required>
+        <button type="submit">Add Ingredient</button>
+    </form>
+    
+    <h2>Current Ingredients</h2>
+    <ul>
+        <li>Flour <button>Remove</button></li>
+        <li>Sugar <button>Remove</button></li>
+        <li>Salt <button>Remove</button></li>
+        <li>Eggs <button>Remove</button></li>
+        <li>Butter <button>Remove</button></li>
+    </ul>
+</body>
+</html>

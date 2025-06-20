@@ -1,83 +1,59 @@
 const express = require('express');
 const router = express.Router();
+const Ingredient = require('../models/ingredient');
 
-const User = require('../models/user.js');
-const Recipe = require('../models/recipes.js');
-
-router.get("/sign-up", (req, res) => {
-    res.render("Cookbook/sign-up.ejs");
+// View all ingredients
+router.get('/', async (req, res) => {
+  try {
+    const ingredients = await Ingredient.find();
+    res.render('ingredients/index', { ingredients });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/');
+  }
 });
 
-// Finding the username inside the database, if exist then it will say username is already taken 
-router.post("/sign-up", async (req, res )=>{
-  const userInDatabase = await User.findOne({ username: req.body.username});
-  if(userInDatabase) {
-    return res.send("Username already taken");
+// Add a new Ingredient
+router.post('/', async (req, res) => {
+  try {
+    await Ingredient.create({ name: req.body.name });
+    res.redirect('/ingredients');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/ingredients');
   }
-  // if first condition is true then check the password if it matches or not
-  if(req.body.password !== req.body.confirmPassword){
-    return res.send("Password and confirm password must match")
-  }
-  // Register a User
-  const hashedPassword = bcrypt.hashSync(req.body.password, 10); // 10 refers to encrpt it 10 times to make it more secure 
-  req.body.password = hashedPassword; // once we have the hashPassword then we are replacing it with the password
-  // Create a User
-  const user = await User.create(req.body);
-  res.send(`Thanks for signing up ${user.username}`);
 });
 
-router.get("/sign-in", (req, res) => {
-    res.render("Cookbook/sign-in.ejs");
+router.delete('/:id', async (req, res) => {
+  try {
+    await Ingredient.findByIdAndDelete(req.params.id);
+    res.redirect('/ingredients');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/ingredients');
+  }
 });
 
-
-
-router.post("/sign-in", async (req, res) => {
-  const userInDatabase = await User.findOne({ username: req.body.username});
-  if(!userInDatabase){
-    return res.send("Login Failed. Please try again later");
+router.get('/:id/edit', async (req, res) => {
+  try {
+    const ingredient = await Ingredient.findById(req.params.id);
+    res.render('ingredients/edit', { ingredient });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/ingredients');
   }
-  const validPassword = bcrypt.compareSync(req.body.password, userInDatabase.password);
-  if(!validPassword){
-    return res.send("Login Failed. Please try again later");
-  }
-  req.session.user = {
-    username: userInDatabase.username,
-    _id: userInDatabase._id
-  };
-  res.redirect("/");
 });
 
-// For sign out
-router.get("/sign-out", (req, res) => {
-    req.session.destroy();
-    res.redirect("/");
+router.put('/:id', async (req, res) => {
+  try {
+    await Ingredient.findByIdAndUpdate(req.params.id, { 
+      name: req.body.name 
+    });
+    res.redirect('/ingredients');
+  } catch (err) {
+    console.error(err);
+    res.redirect(`/ingredients/${req.params.id}/edit`);
+  }
 });
 
 module.exports = router;
-
-
-/*
-const router = require('express').Router();
-const User = require('../models/user');
-const bcrypt = require("bcrypt");
-router.get("/sign-up", (req, res) => {
-  res.render("auth/sign-up.ejs");
-});
-router.post("/sign-up", async (req, res )=>{
-  const userInDatabase = await User.findOne({ username: req.body.username});
-  if(userInDatabase) {
-    return res.send("Username already taken");
-  }
-  if(req.body.password !== req.body.confirmPassword){
-    return res.send("Password and confirm password must match")
-  }
-  // Register a User
-  const hashedPassword = bcrypt.hashSync(req.body.password, 10);
-  req.body.password = hashedPassword;
-  // Create a User
-  const user = await User.create(req.body);
-  res.send(`Thanks for signing up ${user.username}`);
-});
-module.exports = router;
-*/

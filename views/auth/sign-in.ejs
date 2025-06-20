@@ -1,12 +1,37 @@
-<!--  Added one more dot in the directory before the partials  -->
-<%- include ('../partials/_navbar.ejs') %>
-
-<form action="/auth/sign-in" method="POST">
-  <label for="username">Username</label>
-  <input type="text" name="username" id="username">
-  <br>
-  <label for="password">Password</label>
-  <input type="password" name="password" id="password">
-  <br>
-  <button type="submit">Sign In</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In</title>
+ </head>
+<body>
+  <%- include('../partials/_navbar') %>
+  
+  <div class="container">
+    <h1> Log in</h1>
+    
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+    
+    <form action="/auth/sign-in" method="POST">
+      <div class="form-group">
+        <label for="username">User Name:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      
+      <button type="submit">Log In</button>
+    </form>
+    
+    <div class="link">
+      Don't have an account?<a href="/auth/sign-up">Create a new account</a>
+    </div>
+  </div>
+</body>
+</html>

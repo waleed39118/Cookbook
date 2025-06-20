@@ -1,57 +1,100 @@
-// Those are the skeleton of the controller (it should always be there when creating a controller)
 const express = require('express');
 const router = express.Router();
+const Recipe = require('../models/recipe');
+const Ingredient = require('../models/ingredient');
 
-const User = require('../models/user.js');
-const Recipe = require('../models/recipes.js');
+// show all user recipes
+router.get('/', async (req, res) => {
+  try {
+    const recipes = await Recipe.find({ owner: req.session.user._id }).populate('ingredients');
+    res.render('recipes/index', { recipes });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/');
+  }
+});
 
-// module.exports = router;
-
+// new Recipe form
 router.get('/new', async (req, res) => {
-    res.render('Recipe/new.ejs')
-})
+  try {
+    const ingredients = await Ingredient.find();
+    res.render('recipes/new', { ingredients });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/recipes');
+  }
+});
 
-router.post('/', async(req, res) => {
-    const currentUser = await User.findById(req.session.user._id);
-    currentUser.applications.push(req.body);
-    await currentUser.save();
-    res.redirect(`/users/${currentUser._id}/applications`); 
-}) 
+// create new Recipe
+router.post('/', async (req, res) => {
+  try {
+    const newRecipe = new Recipe({
+      name: req.body.name,
+      instructions: req.body.instructions,
+      owner: req.session.user._id,
+      ingredients: req.body.ingredients
+    });
+    await newRecipe.save();
+    res.redirect('/recipes');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/recipes/new');
+  }
+});
 
-router.get('/', async(req,res) => {
-    const currentUser = await User.findById(req.session.user._id);
-    res.render('applications/index.ejs', {applications: currentUser.applications})
+//View recipe details
+router.get('/:recipeId', async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.recipeId)
+      .populate('ingredients')
+      .populate('owner');
+    res.render('recipes/show', { recipe });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/recipes');
+  }
+});
 
-})
+// recipe edit Form
+router.get('/:recipeId/edit', async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.recipeId);
+    const ingredients = await Ingredient.find();
+    res.render('recipes/edit', { recipe, ingredients });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/recipes');
+  }
+});
 
-router.get("/:applicationId", async (req,res) => {
-    const currentUser = await User.findById(req.session.user._id);
-    const application = currentUser.applications.id(req.params.applicationId);
-    res.render('applications/show.ejs', {application})
-})
+// recipe update
+router.put('/:recipeId', async (req, res) => {
+  try {
+    const updatedRecipe = await Recipe.findByIdAndUpdate(
+      req.params.recipeId,
+      {
+        name: req.body.name,
+        instructions: req.body.instructions,
+        ingredients: req.body.ingredients
+      },
+      { new: true }
+    );
+    res.redirect(`/recipes/${req.params.recipeId}`);
+  } catch (err) {
+    console.error(err);
+    res.redirect(`/recipes/${req.params.recipeId}/edit`);
+  }
+});
 
-// Update for edit
-router.get('/:applicationId/edit', async (req,res) => {
-    const currentUser = await User.findById(req.session.user._id);
-    const application = currentUser.applications.id(req.params.applicationId);
-    res.render('applications/edit.ejs', {application});
-} )
-
-router.put("/:applicationId", async (req, res) => {
-    const currentUser = await User.findById(req.session.user._id);
-    const application = currentUser.applications.id(req.params.applicationId);
-    application.set(req.body);
-    await currentUser.save();
-    res.redirect(`/users/${currentUser._id}/applications/${req.params.applicationId}`);
-})
-
-// Deleting now
-router.delete("/:applicationId", async (req, res) => {
-    const currentUser = await User.findById(req.session.user._id);
-    const application = currentUser.applications.id(req.params.applicationId).deleteOne(); // for deleting from the the array we use delete one | we cannot use remove becasue remove is only for the objects 
-    await currentUser.save();
-    res.redirect("/users/${currentUser._id}/applications"); 
-}); 
-
+// recipe delete
+router.delete('/:recipeId', async (req, res) => {
+  try {
+    await Recipe.findByIdAndDelete(req.params.recipeId);
+    res.redirect('/recipes');
+  } catch (err) {
+    console.error(err);
+    res.redirect(`/recipes/${req.params.recipeId}`);
+  }
+});
 
 module.exports = router;

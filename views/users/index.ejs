@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>the society</title>
+</head>
+<body>
+  <h1>Community members</h1>
+  
+  <% if (users.length > 0) { %>
+    <ul>
+      <% users.forEach(user => { %>
+        <li>
+          <a href="/users/<%= user._id %>"><%= user.username %></a>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>There are no registered members yet</p>
+  <% } %>
+</body>
+</html>

@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CookBook</title>
+    <title>Cookbook Home</title>
 </head>
 <body>
-
-  <!-- // Added this  (line 11) -->
-    <%- include ('./partials/_navbar.ejs') %> 
-    <h1>CookBook</h1>
-    <p>A Recipe Food.</p>
+    <%- include('partials/_navbar') %>
+    
+    <h1>Welcome to Cookbook</h1>
+    <p>A recipe management application</p>
+    
+    <% if (user) { %>
+        <p>You are logged in as <strong><%= user.username %></strong></p>
+        <a href="/recipes">View your recipes</a>
+    <% } else { %>
+        <p>Please <a href="/auth/sign-in">sign in</a> or <a href="/auth/sign-up">sign up</a> to start.</p>
+    <% } %>
 </body>
 </html>

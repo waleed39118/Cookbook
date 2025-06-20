@@ -1,56 +1,28 @@
-const router = require("express").Router();
-const mongoose = require("mongoose");
-const Application = require("../models/application");
-const User = require("../models/user");
+const express = require('express');
+const router = express.Router();
+const User = require('../models/user');
+const Recipe = require('../models/recipe');
 
-// صفحة إنشاء تطبيق جديد
-router.get("/users/:id/applications/new", async (req, res) => {
-  res.render("users/new-application.ejs", {
-    userId: req.params.id,
-  });
-});
-
-// حفظ تطبيق جديد
-router.post("/users/:id/applications", async (req, res) => {
-  const userId = req.params.id;
-
-  // التحقق من صلاحية ObjectId
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).send("Invalid user ID");
-  }
-
+// show all users
+router.get('/', async (req, res) => {
   try {
-    const application = await Application.create({
-      user: userId,
-      title: req.body.title,
-    });
-
-    res.redirect(`/users/${userId}/applications`);
+    const users = await User.find();
+    res.render('users/index', { users });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Failed to create application");
+    res.redirect('/');
   }
 });
 
-// عرض التطبيقات الخاصة بالمستخدم
-router.get("/users/:id/applications", async (req, res) => {
-  const userId = req.params.id;
-
-  // التحقق من صلاحية ObjectId
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).send("Invalid user ID");
-  }
-
+// show a specific user's recipes
+router.get('/:userId', async (req, res) => {
   try {
-    const applications = await Application.find({ user: userId });
-
-    res.render("users/applications.ejs", {
-      applications,
-      userId,
-    });
+    const user = await User.findById(req.params.userId);
+    const recipes = await Recipe.find({ owner: req.params.userId });
+    res.render('users/show', { user, recipes });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Something went wrong");
+    res.redirect('/users');
   }
 });
 
