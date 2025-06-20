@@ -1,18 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>New Application</title>
+  <title>My Applications</title>
 </head>
 <body>
-  <h1>Create New Application</h1>
+  <h1>My Applications</h1>
 
-  <form action="/users/<%= userId %>/applications" method="POST">
-    <label for="title">Application Title:</label>
-    <input type="text" id="title" name="title" required>
+  <% if (userId) { %>
+    <a href="/users/<%= userId %>/applications/new">
+      <button>+ New Application</button>
+    </a>
+  <% } else { %>
+    <p style="color: red;">User ID not available — cannot create new application.</p>
+  <% } %>
 
-    <br><br>
+  <% if (applications.length > 0) { %>
+    <ul>
+      <% applications.forEach(app => { %>
+        <li>
+          <strong><%= app.title %></strong> - 
+          <span class="status"><%= app.status || 'Pending' %></span>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p class="no-applications">No applications found.</p>
+  <% } %>
 
-    <button type="submit">Submit Application</button>
-  </form>
 </body>
 </html>

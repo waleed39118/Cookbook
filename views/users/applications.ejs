@@ -6,15 +6,22 @@
 <body>
   <h1>My Applications</h1>
 
-<a href="/users/<%= applications[0]?.user || 'USER_ID' %>/applications/new">
-  <button>+ New Application</button>
-</a>
+  <% if (userId) { %>
+    <a href="/users/<%= userId %>/applications/new">
+      <button>+ New Application</button>
+    </a>
+  <% } else { %>
+    <p style="color: red;">User ID not available — cannot create new application.</p>
+  <% } %>
 
-<ul>
-  <% applications.forEach(app => { %>
-    <li><strong><%= app.title %></strong> - <%= app.status %></li>
-  <% }) %>
-</ul>
-
+  <ul>
+    <% if (applications.length > 0) { %>
+      <% applications.forEach(app => { %>
+        <li><strong><%= app.title %></strong> - <%= app.status || 'Pending' %></li>
+      <% }) %>
+    <% } else { %>
+      <li>No applications found.</li>
+    <% } %>
+  </ul>
 </body>
 </html>
